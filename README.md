@@ -8,6 +8,7 @@ This repository contains Python code for predicting stock prices using three dif
 
 # Author
 Taraneh Shahin 
+
 orcid: 0000-0001-8381-8462
 
 ## Overview
