@@ -1,9 +1,7 @@
-# %%
 import sys
 import warnings
-
 warnings.simplefilter("ignore")
-sys.path.append(r"D:\Ph.D\Programming\Py\GBNN")
+sys.path.append("\GBNN")
 import os
 import glob
 import csv
@@ -38,7 +36,6 @@ with open(output_file, "w", newline="") as csvfile:
     writer.writerow(["File", "Method", "RMSE", "MAE", "MSE", "R2"])
 
     for file in tqdm(csv_files):
-        # Read the CSV file into a Pandas DataFrame
         new_df = pd.read_csv(file)
 
         model = BaseIndicators(new_df)
