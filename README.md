@@ -48,7 +48,11 @@ Dependencies
 * `matplotlib`
 * `scikit-learn`
 * `statsmodels`
-* `GBNN` (Make sure the clone "GBNN" module is available in the specified path.)
+* `GBNN` (Make sure the cloned "GBNN" module is available in the specified path.)
+
+GBNN is available on:
+
+https://github.com/GAA-UAM/GBNN
 
 # Release Date
 
