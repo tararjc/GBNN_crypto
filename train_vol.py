@@ -11,7 +11,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.discriminant_analysis import StandardScaler
 from Base.base_indicators import BaseIndicators
-from Base.featuer_selection import FeatuerSelection
+from Base.featuer_selection import FeatuerSelection_vol
 from sklearn.model_selection import train_test_split, GridSearchCV, KFold
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 from GBNN import GNEGNERegressor
@@ -51,7 +51,6 @@ with open(output_file, "w", newline="") as csvfile:
             (model._ma, "MA"),
             (model._ema, "EMA"),
             (model._roc, "ROC"),
-            (model._Volatility_trends, "Volatility_trends"),
         ]
 
         i = 0
@@ -59,21 +58,20 @@ with open(output_file, "w", newline="") as csvfile:
             for func, func_name in methods:
                 new_df[str(func_name)] = func().values
                 i += 1
-        new_df.dropna(inplace=True)
         new_df.fillna(0, inplace=True)
-        Volatility_trends = new_df.Volatility_trends
-        selector = FeatuerSelection(new_df)
+        new_df["volatility"] = new_df["Close"].pct_change().rolling(5).std() * (
+            365**0.5
+        )
+        new_df.dropna(inplace=True)
+        selector = FeatuerSelection_vol(new_df)
         df = selector()
-        if "Volatility_trends" not in list(df.columns):
-            df["Volatility_trends"] = np.array(Volatility_trends)
-        X = df.drop(["Volatility_trends"], axis=1)
-        y = df["Volatility_trends"]
+        X = df.drop(["volatility"], axis=1)
+        y = df["volatility"]
 
         X = X.reset_index()
         X.drop(columns="Date", inplace=True)
-        X.drop(columns=["Open", "High", "Low", "Adj Close"], inplace=True)
         try:
-            X.drop(columns="index", inplace=True)
+            X.drop(columns=["Open", "High", "Low", "Adj Close"], inplace=True)
         except:
             pass
         scaler = StandardScaler()
@@ -189,7 +187,6 @@ with open(output_file, "w", newline="") as csvfile:
         residuals = y_test - pred_gbnn
         residuals = [r - p for r, p in zip(y_test, pred_gbnn)]
 
-
         ax[0].scatter(y_test, residuals)
         ax[0].axhline(
             0, color="red", linestyle="--"
@@ -200,7 +197,6 @@ with open(output_file, "w", newline="") as csvfile:
 
         residuals = y_test - pred_gbnn
         residuals = [r - p for r, p in zip(y_test, pred_sarima)]
-
 
         ax[1].scatter(y_test, residuals)
         ax[1].axhline(
@@ -225,6 +221,5 @@ with open(output_file, "w", newline="") as csvfile:
             rf"results_volatility\{extract_string(file, pattern)}_Residual.png", dpi=700
         )
 
-
-
 print(f"Results are stored in {output_file}")
+# %%
