@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 
+
 class BaseIndicators:
     def __init__(self, df):
         self.df = df
@@ -108,6 +109,18 @@ class BaseIndicators:
     def _traded_value(self):
         df = self._preProcess_Data()
         return df["Volume"] * df["Close"]
+
+    def _Volatility_trends(self, n=14):
+        df = self._preProcess_Data()
+
+        df["log_returns"] = np.log(df["Close"] / df["Close"].shift(1))
+
+        def ewma_volatility(returns):
+            return returns.ewm(span=n, adjust=False).std().iloc[-1]
+
+        volatility = df["log_returns"].rolling(window=n).apply(ewma_volatility)
+
+        return volatility
 
     def _Volatility(self, n=14):
         df = self._preProcess_Data()
