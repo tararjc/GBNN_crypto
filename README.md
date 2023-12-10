@@ -2,9 +2,13 @@
 
 Gradient Boosted Neural Network to predict Cryptocurrency price
 
-`<hr>`
+<hr>
 
 This repository contains Python code for predicting stock prices using three different models: SARIMA (Seasonal Autoregressive Integrated Moving Average), GBNN (Gradient Boosted Neural Network), and MLP (Multi-Layer Perceptron). The code also includes feature selection using Support Vector Regression (SVR).
+
+# Author
+Taraneh Shahin 
+orcid: 0000-0001-8381-8462
 
 ## Overview
 
